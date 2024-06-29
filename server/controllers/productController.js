@@ -1,9 +1,4 @@
 const product = require("../models/product");
-const product = require("../models/product");
-const product = require("../models/product");
-const product = require("../models/product");
-const product = require("../models/product");
-const product = require("../models/product");
 
 module.exports = {
   createProduct: async (req, res) => {
@@ -37,7 +32,6 @@ module.exports = {
   },
 
   searchProduct: async (req, res) => {
-    const query = req.query.product;
     try {
       const result = await product.aggregate([
         {
