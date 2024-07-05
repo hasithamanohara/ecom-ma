@@ -16,18 +16,18 @@ module.exports = {
       const products = await product.find().sort({ createdAt: -1 });
       res.status(200).json(products);
     } catch (e) {
-      res.status(500).json(e + " failed to get all products");
+      res.status(500).json(e + "   failed to get all products");
     }
   },
 
   getProductByID: async (req, res) => {
-    const productId = req.params.product;
+    const productId = req.params.id;
     try {
-      const product = await product.findByID(productId);
-      const { _v, createdAt, ...productData } = product._doc;
+      const Product = await product.findById(productId);
+      const { _v, createdAt, ...productData } = Product._doc;
       res.status(200).json(productData);
     } catch (e) {
-      res.status(500).json("Product not found");
+      res.status(500).json("Product not found or " + e.message);
     }
   },
 
