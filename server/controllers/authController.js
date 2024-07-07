@@ -24,16 +24,20 @@ module.exports = {
 
   logInUser: async (req, res, next) => {
     try {
-      const user = await User.find({ email: req.params.email });
+      const user = await User.findOne({ email: req.body.email });
       !user && res.status(401).json("Wrong email or password!");
 
-      const decryptedP = crypto.AES.decrypt(
+      const decryptedP = CryptoJS.AES.decrypt(
         user.password,
         process.env.SECRETE_KEY
       );
-      const decreptedPassword = decryptedP.toString(crypto.enc.Utf8);
+      const decreptedPassword = decryptedP.toString(CryptoJS.enc.Utf8);
 
       decreptedPassword !== req.body.password;
+
+      if (decreptedPassword !== req.body.password) {
+        return res.status(401).json("Wrong email or password!");
+      }
 
       const userToken = jwt.sign(
         {
@@ -42,7 +46,7 @@ module.exports = {
         process.env.SECRETE_JWT,
         { expiresIn: "3d" }
       );
-      const { password, _V, createAt, ...others } = user._doc;
+      const { password, __v, createdAt, updatedAt, ...others } = user._doc;
 
       res.status(200).json({ ...others, token: userToken });
     } catch (err) {
